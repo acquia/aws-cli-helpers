@@ -1,7 +1,7 @@
 # AWS CLI Helpers
 
 This repository contains a series of bash functions that make it easier to work
-with the AWS CLI tool
+with the [AWS CLI tool](https://aws.amazon.com/cli/).
 
 ## Installation
 
@@ -37,7 +37,7 @@ Create a simple filter, for example running instances.
 filter "instance-state-name" "running"`
 ```
 
-.. evaluates to:
+... which evaluates to:
 
 ```
 Name=instance-state-name,Values="running"
@@ -55,4 +55,13 @@ logical_id_ec2_filter "my-stack" "MyResource"
 
 ```
 Name=instance-state-name,Values="running" Name=tag-key,Values="aws:cloudformation:stack-name" Name=tag-value,Values="my-stack" Name=tag-key,Values="aws:cloudformation:logical-id" Name=tag-value,Values="MyResource"
+```
+
+#### Public IP addresses
+
+Use the `ips_from_logical_id` function output the public IP addresses for EC2
+instances in a CloudFormation stack associated with a resource that are running.
+
+```shell
+ips_from_logical_id "my-stack" "MyResource"
 ```
