@@ -5,8 +5,8 @@ with the [AWS CLI tool](https://aws.amazon.com/cli/).
 
 ## Installation
 
-Clone this repository or download the source code. Source the `aws-cli-helpers`
-fine in your bash script using the following snippet:
+Clone this repository or download the source code, then source the
+`aws-cli-helpers` file in your bash script:
 
 ```shell
 #!/usr/bin/env bash
