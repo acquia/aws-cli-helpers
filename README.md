@@ -20,8 +20,8 @@ Clone this repository or download the source code, then source the
 
 Many AWS commands accept the `--filters` option. This option is equally a pain
 in the ass as it is powerful. The functions in this library make it easier to
-create filters. Assuming that the output of the filter commands below are
-captured in the `$FILTERS` variable, the can be used in aws commands like below:
+create filters. Assuming that the output of the filter functions in the examples
+are captured in the `$FILTERS` variable, they can be used in `aws` commands:
 
 ```shell
 aws ec2 describe-instances --filters $FILTERS
@@ -43,7 +43,7 @@ Name=instance-state-name,Values="running"
 
 ##### Complex, predefined filters
 
-Filter instances by resource in a CloudFormation stack:
+Filter for running EC2 instances in a CloudFormation stack by resource:
 
 ```shell
 logical_id_ec2_filter "my-stack" "MyResource"

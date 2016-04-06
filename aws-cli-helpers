@@ -143,16 +143,11 @@ logical_id_ec2_filter () {
 ips_from_logical_id () {
   check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
   check_arg "$2" "argument 2 required for ips_from_logical_id: logical-id"
-  aws ec2 describe-instances --filters $(logical_id_ec2_filter "$1" "$2") | jq -r '.Reservations[].Instances[0].PublicIpAddress'
+  aws ec2 describe-instances --filters $(logical_id_ec2_filter "$1" "$2") --query "Reservations[*].Instances[*].PublicIpAddress" --output text
   return $?
 }
 
 # Validate that the required libraries are present.
 if [ -z $(which aws) ]; then
   exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
-fi
-
-# TODO(cpliakas): Remove this dependency
-if [ -z $(which jq) ]; then
-  exit_err "Unable to locate 'jq', ensure it is installed and in the PATH."
 fi
