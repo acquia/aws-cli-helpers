@@ -20,10 +20,8 @@ Clone this repository or download the source code, then source the
 
 Many AWS commands accept the `--filters` option. This option is equally a pain
 in the ass as it is powerful. The functions in this library make it easier to
-create filters.
-
-The following examples assume that the output is being stored in the `$FILTERS`
-variable, and can therefore be used by running the following command:
+create filters. Assuming that the output of the filter commands below are
+captured in the `$FILTERS` variable, the can be used in aws commands like below:
 
 ```shell
 aws ec2 describe-instances --filters $FILTERS
