@@ -138,7 +138,7 @@ logical_id_ec2_filter () {
 #   - Stack name
 #   - Resource's logical ID
 # Returns:
-#   Outputs the filter
+#   The public IP addresses
 #######################################
 ips_from_logical_id () {
   check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
@@ -147,7 +147,25 @@ ips_from_logical_id () {
   return $?
 }
 
-# Validate that the required libraries are present.
+#######################################
+# Outputs the AMIs that EC2 instances were launched from given the stack name
+# and logical ID parameters passed to this function in that order.
+# Globals:
+#   None
+# Arguments:
+#   - Stack name
+#   - Resource's logical ID
+# Returns:
+#   Outputs the filter
+#######################################
+amis_from_logical_id () {
+  check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
+  check_arg "$2" "argument 2 required for ips_from_logical_id: logical-id"
+  aws ec2 describe-instances --filters $(logical_id_ec2_filter "$1" "$2") --query "Reservations[*].Instances[*].ImageId" --output text | sort -u
+  return $?
+}
+
+# Validate that the aws tool is present.
 if [ -z $(which aws) ]; then
   exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
 fi
