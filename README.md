@@ -64,6 +64,16 @@ instances in a CloudFormation stack associated with a resource that are running.
 ips_from_logical_id "my-stack" "MyResource"
 ```
 
+#### Image IDs
+
+Use the `amis_from_logical_id` function output the unique image IDs that EC2
+instances in a CloudFormation stack associated with a resource ID were launched
+from.
+
+```shell
+amis_from_logical_id "my-stack" "MyResource"
+```
+
 ## Contributing
 
 Pull requests are welcome. Please follow [Google's Shell Style Guide](https://google.github.io/styleguide/shell.xml).
