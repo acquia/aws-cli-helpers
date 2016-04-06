@@ -1,87 +1,158 @@
 # Functions that simplify working with the AWS CLI tool -*- shell-script -*-
 #
 # Copyright (c) 2016 Acquia
-# All rights reserved.
+# See the LICENSE file shipped with the source code.
 
-# Helper function that prints the passed dargument to STDERR.
-error ()
-{
-    if [ -n "$1"]; then >&2 echo "$1"; fi
+#######################################
+# Outputs all arguments to STDERR, prefixed with the date.
+# Globals:
+#   None
+# Arguments:
+#   (optional) N number of arguments, all sent to STDERR
+# Returns:
+#   Outputs arguments to STDERR
+#######################################
+err () {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
 }
 
-# Prints the argument to STDERR and exits with athe passed status code (defaults
-# to a status code 1 if the second argument isn't passed.)
-exit_error ()
-{
-    if [ -n "$1" ]; then >&2 echo "$1"; fi
-    if [ -n "$2" ]; then exit $2; else exit 1; fi
+#######################################
+# Helper function that outputs the passed argument to STDERR and exits. If the
+# last argument is an integer, then it is returned as the status code by the
+# script and is not printed to STDERR.
+# Globals:
+#   None
+# Arguments:
+#   (optional) The first N arguments are printed to STDERR, if the last argument
+#   is an integer then it is the status code returned by this script.
+# Returns:
+#   Outputs the message to STDERR and returns a non-zero status code.
+#######################################
+exit_err () {
+  status_code=${@:$#}
+  if [ "$status_code" -eq "$status_code" ] 2> /dev/null; then
+    err $(echo "$@" | sed -e "s/[ \t]*$status_code$//")
+    exit $status_code
+  else
+    err $@
+    exit 1
+  fi
 }
 
-# Ensures that a required argument is present. If it is not, an error message
-# is displayed and the program exists with a non-zero status code.
-check_arg ()
-{
-    if [ -z "$1" ]; then
-        if [ -n "$2" ]; then
-            exit_error "$2" $3
-        else
-            exit_error "function missing required argument" $3
-        fi
+#######################################
+# Helper function that ensures required arguments were passed to the function.
+# Globals:
+#   None
+# Arguments:
+#   - Argument being checked
+#   - (optional) Error message, default: "function missing required argument"
+#   - (optional) Status code returned when the script exits.
+# Returns:
+#   Outputs the message to STDERR and returns a non-zero status code.
+#######################################
+check_arg () {
+  if [ -z "$1" ]; then
+    if [ -n "$2" ]; then
+      exit_err "$2" $3
+    else
+      exit_err "function missing required argument" $3
     fi
+  fi
 }
 
+#######################################
 # Outputs a filter formatted for the --filters option. This function requires
 # the filter name and values to be passed as arguments.
-filter ()
-{
-    check_arg "$1" "argument 1 required for filter: name"
-    check_arg "$2" "argument 2 required for filter: values"
-    echo "Name=$1,Values=\"$2\""
+# Globals:
+#   None
+# Arguments:
+#   - Filter name e.g. "instance-state-name"
+#   - Filter value(s) e.g. "running"
+# Returns:
+#   Outputs the filter
+#######################################
+filter () {
+  check_arg "$1" "argument 1 required for filter: name"
+  check_arg "$2" "argument 2 required for filter: values"
+  echo "Name=$1,Values=\"$2\""
 }
 
+#######################################
 # Outputs a tag filter formatted for the --filters option. This function
 # requires the key name tag value to be passed as arguments.
-tag_filter ()
-{
-    check_arg "$1" "argument 1 required for tag_filter: tag-key"
-    check_arg "$2" "argument 2 required for tag_filter: tag-value"
-    echo "Name=tag-key,Values=\"$1\" Name=tag-value,Values=\"$2\""
+# Globals:
+#   None
+# Arguments:
+#   - Tag key e.g. "aws:cloudformation:stack-name"
+#   - Tag value e.g. "my-stack"
+# Returns:
+#   Outputs the filter
+#######################################
+tag_filter () {
+  check_arg "$1" "argument 1 required for tag_filter: tag-key"
+  check_arg "$2" "argument 2 required for tag_filter: tag-value"
+  echo "Name=tag-key,Values=\"$1\" Name=tag-value,Values=\"$2\""
 }
 
+#######################################
 # Outputs a filter for resources in a stack that are associated with a logical
 # resource ID.
-logical_id_filter ()
-{
-    check_arg "$1" "argument 1 required for logical_id_filter: stack-name"
-    check_arg "$2" "argument 2 required for logical_id_filter: logical-id"
-    echo "$(tag_filter aws:cloudformation:stack-name $1) $(tag_filter aws:cloudformation:logical-id $2)"
+# Globals:
+#   None
+# Arguments:
+#   - Stack name
+#   - Resource's logical ID
+# Returns:
+#   Outputs the filter
+#######################################
+logical_id_filter () {
+  check_arg "$1" "argument 1 required for logical_id_filter: stack-name"
+  check_arg "$2" "argument 2 required for logical_id_filter: logical-id"
+  echo "$(tag_filter aws:cloudformation:stack-name $1) $(tag_filter aws:cloudformation:logical-id $2)"
 }
 
+#######################################
 # Outputs a filter for running EC2 instances in a stack that are associated with
-# a logical resource ID.
-logical_id_ec2_filter ()
-{
-    check_arg "$1" "argument 1 required for logical_id_ec2_filter: stack-name"
-    check_arg "$2" "argument 2 required for logical_id_ec2_filter: logical-id"
-    echo "$(filter instance-state-name running) $(logical_id_filter $1 $2)"
+# a logical resource ID. In addition the the logical_id_filter filters, this
+# function adds a filter that ensures the instances are running.
+# Globals:
+#   None
+# Arguments:
+#   - Stack name
+#   - Resource's logical ID
+# Returns:
+#   Outputs the filter
+#######################################
+logical_id_ec2_filter () {
+  check_arg "$1" "argument 1 required for logical_id_ec2_filter: stack-name"
+  check_arg "$2" "argument 2 required for logical_id_ec2_filter: logical-id"
+  echo "$(filter instance-state-name running) $(logical_id_filter $1 $2)"
 }
 
+#######################################
 # Outputs the public IP addresses of EC2 instances given the stack name and
 # logical ID parameters passed to this function in that order.
-ips_from_logical_id ()
-{
-    check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
-    check_arg "$2" "argument 2 required for ips_from_logical_id: logical-id"
-    aws ec2 describe-instances --filters $(logical_id_ec2_filter "$1" "$2") | jq -r '.Reservations[].Instances[0].PublicIpAddress'
-    return $?
+# Globals:
+#   None
+# Arguments:
+#   - Stack name
+#   - Resource's logical ID
+# Returns:
+#   Outputs the filter
+#######################################
+ips_from_logical_id () {
+  check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
+  check_arg "$2" "argument 2 required for ips_from_logical_id: logical-id"
+  aws ec2 describe-instances --filters $(logical_id_ec2_filter "$1" "$2") | jq -r '.Reservations[].Instances[0].PublicIpAddress'
+  return $?
 }
 
 # Validate that the required libraries are present.
-
 if [ -z $(which aws) ]; then
-    exit_error "Unable to locate 'aws', ensure it is installed and in the PATH."
+  exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
 fi
 
+# TODO(cpliakas): Remove this dependency
 if [ -z $(which jq) ]; then
-    exit_error "Unable to locate 'jq', ensure it is installed and in the PATH."
+  exit_err "Unable to locate 'jq', ensure it is installed and in the PATH."
 fi

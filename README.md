@@ -65,3 +65,7 @@ instances in a CloudFormation stack associated with a resource that are running.
 ```shell
 ips_from_logical_id "my-stack" "MyResource"
 ```
+
+## Contributing
+
+Pull requests are welcome. Please follow [Google's Shell Style Guide](https://google.github.io/styleguide/shell.xml).
