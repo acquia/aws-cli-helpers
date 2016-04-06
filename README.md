@@ -1,18 +1,26 @@
 # AWS CLI Helpers
 
-...
+This repository contains a series of bash functions that make it easier to work
+with the AWS CLI tool
 
 ## Installation
 
-...
+Clone this repository or download the source code. Source the `aws-cli-helpers`
+fine in your bash script using the following snippet:
+
+```shell
+#!/usr/bin/env bash
+
+. /path/to/aws-cli-helpers
+```
 
 ## Usage
 
 #### Filters
 
-Many AWS commands accept the `--filters` option. This is equally as powerful as
-it is a pain in the ass. The functions in this library make it easier to create
-filters.
+Many AWS commands accept the `--filters` option. This option is equally a pain
+in the ass as it is powerful. The functions in this library make it easier to
+create filters.
 
 The following examples assume that the output is being stored in the `$FILTERS`
 variable, and can therefore be used by running the following command:
@@ -46,5 +54,5 @@ logical_id_ec2_filter "my-stack" "MyResource"
 ... which evaluates to:
 
 ```
-Name=instance-state-name,Values="running" Name=tag-key,Values="aws:cloudformation:stack-name" Name=tag-value,Values="my-stack" Name=tag-key,Values="aws:cloudformation:logical-id" Name=tag-value,Values="AutoScalingGroupElasticsearch"
+Name=instance-state-name,Values="running" Name=tag-key,Values="aws:cloudformation:stack-name" Name=tag-value,Values="my-stack" Name=tag-key,Values="aws:cloudformation:logical-id" Name=tag-value,Values="MyResource"
 ```
