@@ -130,6 +130,24 @@ logical_id_ec2_filter () {
 }
 
 #######################################
+# Outputs the resources unique identifier given the stack name and the logical
+# ID of the resource
+# Globals:
+#   None
+# Arguments:
+#   - Stack name
+#   - Resource's logical ID
+# Returns:
+#   The resources unique identifier.
+#######################################
+resource_id_from_logical_id () {
+  check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
+  check_arg "$2" "argument 2 required for ips_from_logical_id: logical-id"
+  aws cloudformation describe-stack-resources --stack-name "$1" --logical-resource-id="$2" --query "StackResources[*].PhysicalResourceId" --output text
+  return $?
+}
+
+#######################################
 # Outputs the public IP addresses of EC2 instances given the stack name and
 # logical ID parameters passed to this function in that order.
 # Globals:

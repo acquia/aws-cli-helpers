@@ -55,6 +55,18 @@ logical_id_ec2_filter "my-stack" "MyResource"
 Name=instance-state-name,Values="running" Name=tag-key,Values="aws:cloudformation:stack-name" Name=tag-value,Values="my-stack" Name=tag-key,Values="aws:cloudformation:logical-id" Name=tag-value,Values="MyResource"
 ```
 
+#### Resource IDs
+
+Use the `resource_id_from_logical_id` function to get the resource's unique ID
+given a CloudFormation stack name and resource ID.
+
+```shell
+resource_id_from_logical_id "my-stack" "MyResource"
+```
+
+If, for example, the resource is an RDS database, the output will be the "DB
+Instance Identifier".
+
 #### Public IP addresses
 
 Use the `ips_from_logical_id` function output the public IP addresses for EC2
