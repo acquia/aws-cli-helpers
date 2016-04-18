@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.com/acquia/aws-cli-helpers.svg?token=PH71WkhMufTnsVvCU5rV&branch=master)](https://travis-ci.com/acquia/aws-cli-helpers)
 
-This repository contains a series of bash functions that make it easier to work
-with the [AWS CLI tool](https://aws.amazon.com/cli/).
+This repository contains a series of bash functions that make working with the
+[AWS CLI tool](https://aws.amazon.com/cli/) easier.
 
 ## Installation
 
