@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.com/acquia/aws-cli-helpers.svg?token=PH71WkhMufTnsVvCU5rV&branch=master)](https://travis-ci.com/acquia/aws-cli-helpers)
 
-This repository contains a series of bash functions that make it easier to work
-with the [AWS CLI tool](https://aws.amazon.com/cli/).
+This repository contains a series of bash functions that make working with the
+[AWS CLI tool](https://aws.amazon.com/cli/) easier.
 
 ## Installation
 
@@ -91,3 +91,4 @@ amis_from_logical_id "my-stack" "MyResource"
 ## Contributing
 
 Pull requests are welcome. Please follow [Google's Shell Style Guide](https://google.github.io/styleguide/shell.xml).
+Make a best effort to write tests. We use the [Bash Automated Testing System](https://github.com/sstephenson/bats) (bats).
