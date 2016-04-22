@@ -16,6 +16,11 @@ Clone this repository or download the source code, then source the
 . /path/to/aws-cli-helpers
 ```
 
+## Contributing
+
+Pull requests are welcome. Please follow [Google's Shell Style Guide](https://google.github.io/styleguide/shell.xml).
+Make a best effort to write tests. We use the [Bash Automated Testing System](https://github.com/sstephenson/bats) (bats).
+
 ## Usage
 
 #### Filters
@@ -100,8 +105,3 @@ from.
 ```shell
 amis_from_logical_id "my-stack" "MyResource"
 ```
-
-## Contributing
-
-Pull requests are welcome. Please follow [Google's Shell Style Guide](https://google.github.io/styleguide/shell.xml).
-Make a best effort to write tests. We use the [Bash Automated Testing System](https://github.com/sstephenson/bats) (bats).
