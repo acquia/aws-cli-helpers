@@ -77,10 +77,10 @@ given a CloudFormation stack name and resource ID.
 resource_id_from_logical_id "my-stack" "MyResource"
 ```
 
-#### EC2 w/ CloudFormation
-
 If, for example, the resource is an RDS database, the output will be the "DB
 Instance Identifier".
+
+#### EC2 w/ CloudFormation
 
 ##### Public IP addresses
 
