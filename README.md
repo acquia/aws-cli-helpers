@@ -57,7 +57,18 @@ logical_id_ec2_filter "my-stack" "MyResource"
 Name=instance-state-name,Values="running" Name=tag-key,Values="aws:cloudformation:stack-name" Name=tag-value,Values="my-stack" Name=tag-key,Values="aws:cloudformation:logical-id" Name=tag-value,Values="MyResource"
 ```
 
-#### Resource IDs
+#### CloudFormation
+
+##### Parameter values
+
+Use the `cfn_parameter` function to get the value of a parameter in a
+CloudFormation stack.
+
+```shell
+cfn_parameter "my-stack" "SomeParameter"
+```
+
+##### Resource IDs
 
 Use the `resource_id_from_logical_id` function to get the resource's unique ID
 given a CloudFormation stack name and resource ID.
@@ -66,10 +77,12 @@ given a CloudFormation stack name and resource ID.
 resource_id_from_logical_id "my-stack" "MyResource"
 ```
 
+#### EC2 w/ CloudFormation
+
 If, for example, the resource is an RDS database, the output will be the "DB
 Instance Identifier".
 
-#### Public IP addresses
+##### Public IP addresses
 
 Use the `ips_from_logical_id` function output the public IP addresses for EC2
 instances in a CloudFormation stack associated with a resource that are running.
@@ -78,7 +91,7 @@ instances in a CloudFormation stack associated with a resource that are running.
 ips_from_logical_id "my-stack" "MyResource"
 ```
 
-#### Image IDs
+##### Image IDs
 
 Use the `amis_from_logical_id` function output the unique image IDs that EC2
 instances in a CloudFormation stack associated with a resource ID were launched

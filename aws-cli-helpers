@@ -177,9 +177,26 @@ ips_from_logical_id () {
 #   Outputs the filter
 #######################################
 amis_from_logical_id () {
-  check_arg "$1" "argument 1 required for ips_from_logical_id: stack-name"
-  check_arg "$2" "argument 2 required for ips_from_logical_id: logical-id"
+  check_arg "$1" "argument 1 required for amis_from_logical_id: stack-name"
+  check_arg "$2" "argument 2 required for amis_from_logical_id: logical-id"
   aws ec2 describe-instances --filters $(logical_id_ec2_filter "$1" "$2") --query "Reservations[*].Instances[*].ImageId" --output text | sort -u
+  return $?
+}
+
+#######################################
+# Outputs the value of a parameter in a CloudFormation stack.
+# Globals:
+#   None
+# Arguments:
+#   - Stack name name
+#   - Parameter
+# Returns:
+#   Outputs the parameter's value
+#######################################
+cfn_parameter () {
+  check_arg "$1" "argument 1 required for cfn_parameter: stack-name"
+  check_arg "$2" "argument 2 required for cfn_parameter: parameter-name"
+  aws cloudformation describe-stacks --stack-name $1 --query "Stacks[*].Parameters[?ParameterKey == '$2'].ParameterValue" --output=text
   return $?
 }
 
