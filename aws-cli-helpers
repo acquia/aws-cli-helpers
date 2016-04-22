@@ -200,6 +200,36 @@ cfn_parameter () {
   return $?
 }
 
+#######################################
+# Outputs the host for a given an RDS instance.
+# Globals:
+#   None
+# Arguments:
+#   - Instance ID
+# Returns:
+#   Outputs the RDS instance's host
+#######################################
+rds_host_from_instance_id() {
+  check_arg "$1" "argument 1 required for rds_host_from_instance_id: instance-id"
+  aws rds describe-db-instances --db-instance-identifier $1 --query "DBInstances[*].Endpoint.Address" --output text
+  return $?
+}
+
+#######################################
+# Outputs the port for a given an RDS instance.
+# Globals:
+#   None
+# Arguments:
+#   - Instance ID
+# Returns:
+#   Outputs the RDS instance's port
+#######################################
+rds_port_from_instance_id() {
+  check_arg "$1" "argument 1 required for rds_host_from_instance_id: instance-id"
+  aws rds describe-db-instances --db-instance-identifier $1 --query "DBInstances[*].Endpoint.Port" --output text
+  return $?
+}
+
 # Validate that the aws tool is present.
 if [ -z $(which aws) ]; then
   exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
