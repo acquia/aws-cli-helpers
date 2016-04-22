@@ -82,8 +82,8 @@ given a CloudFormation stack name and resource ID.
 resource_id_from_logical_id "my-stack" "MyResource"
 ```
 
-If, for example, the resource is an RDS database, the output will be the "DB
-Instance Identifier".
+Check the "Return Value" of the [Resource Type](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
+you are referencing for the value that will be returned by this function.
 
 #### EC2 w/ CloudFormation
 
