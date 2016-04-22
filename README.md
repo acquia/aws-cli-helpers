@@ -119,5 +119,5 @@ rds_host_from_instance_id "$instance_id"
 rds_port_from_instance_id "$instance_id"
 ```
 
-Note: Use the `resource_id_from_logical_id` to get the instance ID if RDS is
-managed via CloudFormation.
+Note: Use `resource_id_from_logical_id` to get the instance ID if RDS is managed
+via CloudFormation.
