@@ -121,3 +121,14 @@ rds_port_from_instance_id "$instance_id"
 
 Note: Use `resource_id_from_logical_id` to get the instance ID if RDS is managed
 via CloudFormation.
+
+#### Route 53
+
+##### Record Name, Value, Hosted Zone Id, Record Type, TTL
+
+Use `*_route53_record` function to create or delete records in Route53.
+
+```shell
+create_route53_record "www.new-record.mywebsite.com" "52.207.211.51" "Z2JSA8O07MCV3T" "A" "900"
+delete_route53_record "www.new-record.mywebsite.com" "52.207.211.51" "Z2JSA8O07MCV3T" "A" "900"
+```
