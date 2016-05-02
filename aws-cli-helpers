@@ -234,3 +234,53 @@ rds_port_from_instance_id() {
 if [ -z $(which aws) ]; then
   exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
 fi
+
+#######################################
+# Deletes a record for a given value.
+# Globals:
+#   None
+# Arguments:
+#   - Record Name
+#   - Value
+#   - Hosted Zone Id
+#   - Record Type
+#   - TTL
+# Returns:
+#   Outputs the status and and submission time of the request.
+#######################################
+create_route53_record() {
+  check_arg "$1" "argument 1 required for create_route53_record: Record Name"
+  check_arg "$2" "argument 2 required for create_route53_record: Value"
+  check_arg "$3" "argument 3 required for create_route53_record: Hosted Zone Id"
+  check_arg "$4" "argument 4 required for create_route53_record: Record Type"
+  check_arg "$5" "argument 5 required for create_route53_record: TTL"
+
+  aws route53 change-resource-record-sets --cli-input-json "{\"HostedZoneId\" : \"$3\",\"ChangeBatch\":{\"Comment\": \"Creating new record.\", \"Changes\": [{\"Action\": \"CREATE\",\"ResourceRecordSet\": {\"Name\": \"$1\",\"Type\": \"$4\",\"TTL\": $5,\"ResourceRecords\": [{\"Value\": \"$2\"}] }}] }}"
+
+  return $?
+}
+
+#######################################
+# Deletes a record for a given value.
+# Globals:
+#   None
+# Arguments:
+#   - Record Name
+#   - Value
+#   - Hosted Zone Id
+#   - Record Type
+#   - TTL
+# Returns:
+#   Outputs the status and and submission time of the request.
+#######################################
+delete_route53_record() {
+  check_arg "$1" "argument 1 required for create_route53_record: Record Name"
+  check_arg "$2" "argument 2 required for create_route53_record: Value"
+  check_arg "$3" "argument 3 required for create_route53_record: Hosted Zone Id"
+  check_arg "$4" "argument 4 required for create_route53_record: Record Type"
+  check_arg "$5" "argument 5 required for create_route53_record: TTL"
+
+  aws route53 change-resource-record-sets --cli-input-json "{\"HostedZoneId\" : \"$3\",\"ChangeBatch\":{\"Comment\": \"Creating new record.\", \"Changes\": [{\"Action\": \"DELETE\",\"ResourceRecordSet\": {\"Name\": \"$1\",\"Type\": \"$4\",\"TTL\": $5,\"ResourceRecords\": [{\"Value\": \"$2\"}] }}] }}"
+
+  return $?
+}
