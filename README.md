@@ -126,7 +126,7 @@ via CloudFormation.
 
 ##### Records
 
-Use `*_route53_record` function to create or delete records in Route53.
+Use the `*_route53_record` functions to create or delete records in Route53.
 
 ```shell
 create_route53_record "www.new-record.mywebsite.com" "52.207.211.51" "Z2JSA8O07MCV3T" "A" "900"
