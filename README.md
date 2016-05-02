@@ -124,7 +124,7 @@ via CloudFormation.
 
 #### Route 53
 
-##### Record Name, Value, Hosted Zone Id, Record Type, TTL
+##### Records
 
 Use `*_route53_record` function to create or delete records in Route53.
 
