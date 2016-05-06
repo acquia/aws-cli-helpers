@@ -130,6 +130,29 @@ logical_id_ec2_filter () {
 }
 
 #######################################
+# Outputs a filter for the active volume that is associated with the
+# stack and autoscaling group that is specified.
+# Globals:
+#   - STACK_NAME
+#   - REGION
+#   - AVAILABILITY_ZONE
+# Arguments:
+#   - Autoscaling Group's logical ID
+# Returns:
+#   Outputs the filter
+#######################################
+persistent_volume_active_filter () {
+  check_arg "$1" "argument 1 required for persistent_volume_active_filter: asg-logical-id"
+
+  stack_name_filter=$(tag_filter "acquia:persistent-volume:stack-name" $STACK_NAME)
+  asg_logical_id_filter=$(tag_filter "acquia:persistent-volume:logical-id" $1)
+  az_filter=$(filter "availability-zone" $AZ)
+  active_vol_filter=$(tag_filter "acquia:persistent-volume:active" "true")
+
+  echo "$stack_name_filter $asg_logical_id_filter $az_filter $active_vol_filter"
+}
+
+#######################################
 # Outputs the resources unique identifier given the stack name and the logical
 # ID of the resource
 # Globals:
@@ -281,6 +304,26 @@ delete_route53_record() {
   check_arg "$5" "argument 5 required for create_route53_record: TTL"
 
   aws route53 change-resource-record-sets --cli-input-json "{\"HostedZoneId\" : \"$3\",\"ChangeBatch\":{\"Comment\": \"Creating new record.\", \"Changes\": [{\"Action\": \"DELETE\",\"ResourceRecordSet\": {\"Name\": \"$1\",\"Type\": \"$4\",\"TTL\": $5,\"ResourceRecords\": [{\"Value\": \"$2\"}] }}] }}"
+
+  return $?
+}
+
+#######################################
+# Outputs the id of the active volume associated with the parameters specified.
+# Globals:
+#   - STACK_NAME
+#   - REGION
+#   - AVAILABILITY_ZONE
+# Arguments:
+#   - Autoscaling Group's logical ID
+# Returns:
+#   Outputs the Volume Id
+#######################################
+persistent_volume_active_id () {
+  check_arg "$1" "argument 1 required for persistent_volume_active_id: asg-logical-id"
+
+  filter=$(persistent_volume_active_filter $STACK_NAME $1 $AZ)
+  aws ec2 describe-volumes --region $REGION --filters $filter | jq -r '.Volumes[0].VolumeId'
 
   return $?
 }

@@ -132,3 +132,13 @@ Use the `*_route53_record` functions to create or delete records in Route53.
 create_route53_record "www.new-record.mywebsite.com" "52.207.211.51" "Z2JSA8O07MCV3T" "A" "900"
 delete_route53_record "www.new-record.mywebsite.com" "52.207.211.51" "Z2JSA8O07MCV3T" "A" "900"
 ```
+
+#### Persistent Volume Attachment
+
+##### Active Volume
+
+Use the persistent_volume_active_id to get the ID of the current active volume for the stackname and ASG.
+
+```shell
+persistent_volume_active_id "AutoScalingGroup"
+```
