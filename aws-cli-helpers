@@ -135,7 +135,7 @@ logical_id_ec2_filter () {
 # Globals:
 #   - STACK_NAME
 #   - REGION
-#   - AZ
+#   - AVAILABILITY_ZONE
 # Arguments:
 #   - Autoscaling Group's logical ID
 # Returns:
@@ -313,7 +313,7 @@ delete_route53_record() {
 # Globals:
 #   - STACK_NAME
 #   - REGION
-#   - AZ
+#   - AVAILABILITY_ZONE
 # Arguments:
 #   - Autoscaling Group's logical ID
 # Returns:
