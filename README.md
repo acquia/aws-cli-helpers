@@ -130,7 +130,7 @@ Use the `rds_*_from_instance_id` functions to get an RDS instance's host and
 port.
 
 ```shell
-# Assumes $instance_id is set
+instance_id=$( metadata "instance-id" )
 rds_host_from_instance_id "$instance_id"
 rds_port_from_instance_id "$instance_id"
 ```
