@@ -85,6 +85,23 @@ resource_id_from_logical_id "my-stack" "MyResource"
 Check the "Return Value" of the [Resource Type](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
 you are referencing for the value that will be returned by this function.
 
+#### EC2
+
+##### Metadata
+
+Use the `metadata` function to retrieve instance metadata. Pass everything after
+`http://169.254.169.254/latest/meta-data/` as the first argument. For example,
+to get the instance ID and the available zone of the running EC2 instances,
+run the following commands:
+
+```shell
+metadata "instance-id"
+metadata "placement/availability-zone"
+```
+
+Check the [Instance Metadata and User Data](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-retrieval)
+documentation for available metadata items.
+
 #### EC2 w/ CloudFormation
 
 ##### Public IP addresses

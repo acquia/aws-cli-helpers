@@ -148,6 +148,22 @@ resource_id_from_logical_id () {
 }
 
 #######################################
+# Invokes a metadata endpoint.
+# Globals:
+#   None
+# Arguments:
+#   - the path after "http://169.254.169.254/latest/meta-data/"
+#     e.g. "instance-id", "placement/availability-zone"
+# Returns:
+#   Outputs the metadata
+#######################################
+metadata () {
+  check_arg "$1" "argument 1 required for metadata: sub-path"
+  curl -f -s "http://169.254.169.254/latest/meta-data/$1"
+  return $?
+}
+
+#######################################
 # Outputs the public IP addresses of EC2 instances given the stack name and
 # logical ID parameters passed to this function in that order.
 # Globals:
@@ -230,11 +246,6 @@ rds_port_from_instance_id() {
   return $?
 }
 
-# Validate that the aws tool is present.
-if [ -z $(which aws) ]; then
-  exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
-fi
-
 #######################################
 # Deletes a record for a given value.
 # Globals:
@@ -284,3 +295,8 @@ delete_route53_record() {
 
   return $?
 }
+
+# Validate that the aws tool is present.
+if [ -z $(which aws) ]; then
+  exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
+fi
