@@ -296,6 +296,30 @@ delete_route53_record() {
   return $?
 }
 
+poll_get_ec2_command_invocation() {
+  commandDescriptionJSON=$(aws ssm get-command-invocation --instance-id "$1" --command-id "$2")
+  commandStatus=$(echo "$commandDescriptionJSON" | python3 -c "import sys, json; print(json.load(sys.stdin)['Status'])")
+  if [[ $commandStatus == "InProgress" ]];
+  then
+    echo "..."
+    sleep 0.5
+    pollGetCommandInvocation "$1" "$2"
+  else
+    echo "$commandDescriptionJSON" | python3 -c "import sys, json; print(json.load(sys.stdin)['StandardOutputContent'])"
+    echo "$commandDescriptionJSON" | python3 -c "import sys, json; print(json.load(sys.stdin)['StandardErrorContent'])"
+  fi
+}
+
+async_run_shell_command_EC2() {
+  # Only supports single-line shell commands. If you need multiple "lines", use semi-colon to separate statements
+  aws ssm send-command --document-name "AWS-RunShellScript" --instance-ids "$1" --parameters "{\"commands\":[\"$2\"],\"executionTimeout\":[\"3600\"]}" --comment "${2:0:30}" --timeout-seconds 600 --region ca-central-1 | python3 -c "import sys, json; print(json.load(sys.stdin)['Command']['CommandId'])"
+}
+
+run_shell_command_EC2() {
+  commandId=$(async_run_shell_command_EC2 "$1")
+  pollGetCommandInvocation "$1" "$commandId"
+}
+
 # Validate that the aws tool is present.
 if [ -z $(which aws) ]; then
   exit_err "Unable to locate 'aws', ensure it is installed and in the PATH."
